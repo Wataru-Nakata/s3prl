@@ -36,7 +36,7 @@ optimizer:
 downstream_expert:
   corpus:                                 
     name: 'libriphone'                   # Specify corpus
-    path: '/mnt/hdd/librispeech/LibriSpeech/'          # Path to raw LibriSpeech dataset
+    path: '/work/ge43/e43001/datasets/LibriSpeech/'          # Path to raw LibriSpeech dataset
     lexicon:
       # - downstream/ctc/lexicon/librispeech-lexicon.txt
       - downstream/ctc/lexicon/librispeech-lexicon-200k-g2p.txt
