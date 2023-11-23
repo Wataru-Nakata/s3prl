@@ -16,9 +16,9 @@ logger = logging.getLogger(__name__)
 class UpstreamExpert(torch.nn.Module):
     def __init__(self, ckpt, **kwds):
         super().__init__()
-        ckpt = "/home/wnakata/SSL4SpeechSynthesis/examples/ssl4speechsynthesis/kli4as6t/checkpoints/epoch-127.ckpt"
+        ckpt = "/work/ge43/e43001/SSL4SpeechSynthesis/examples/ssl4speechsynthesis/kli4as6t/checkpoints/epoch-127.ckpt"
         cfg = torch.load(ckpt)["hyper_parameters"]['hparams']
-        cfg.dac_path = '/home/wnakata/descript-audio-codec/runs/baseline_50Hz_librispeech/best/dac/weights.pth'
+        cfg.dac_path = '/work/ge43/e43001/runs/baseline_50Hz_librispeech/best/dac/weights.pth'
         self.model = DACBertLightningModule(cfg)
         self.model.load_state_dict(torch.load(ckpt)["state_dict"])
 
