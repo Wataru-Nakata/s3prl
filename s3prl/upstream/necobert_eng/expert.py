@@ -3,7 +3,7 @@ import logging
 import torch
 #import pad_sequence
 from torch.nn.utils.rnn import pad_sequence
-from transformers import HubertModel, Wav2Vec2FeatureExtractor
+from transformers import AutoModel
 from ssl4speechsynthesis.model.lightning_module import DACBertLightningModule
 import torchaudio
 
@@ -16,11 +16,7 @@ logger = logging.getLogger(__name__)
 class UpstreamExpert(torch.nn.Module):
     def __init__(self, ckpt, **kwds):
         super().__init__()
-        ckpt = "/work/ge43/e43001/SSL4SpeechSynthesis/examples/ssl4speechsynthesis/kli4as6t/checkpoints/epoch-127.ckpt"
-        cfg = torch.load(ckpt)["hyper_parameters"]['hparams']
-        cfg.dac_path = '/work/ge43/e43001/runs/baseline_50Hz_librispeech/best/dac/weights.pth'
-        self.model = DACBertLightningModule(cfg)
-        self.model.load_state_dict(torch.load(ckpt)["state_dict"])
+        self.model = AutoModel.from_pretrained("Wataru/necobert-base-ls", trust_remote_code=True)
 
     def get_downsample_rates(self, key: str = None) -> int:
         return 320
@@ -29,9 +25,7 @@ class UpstreamExpert(torch.nn.Module):
         device = wavs[0].device
         wavs = [wav.detach().to(device) for wav in wavs]
         input_values = pad_sequence(wavs, batch_first=True)
+        print(device,self.model.device)
         input_values = torchaudio.functional.resample(input_values, SAMPLE_RATE, 24000)
-        self.model.feature_extractor.to(device)
-        z, codes,latents = self.model.feature_extractor(input_values.unsqueeze(1))
-        latents = latents.transpose(1, 2)
-        output_values = self.model.model.forward(x=latents)
-        return {"hidden_states": output_values.hidden_states}
+        output = self.model({"x": input_values.unsqueeze(1)},sample_rate=24000)
+        return {"hidden_states": output.hidden_states}
