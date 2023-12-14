@@ -15,6 +15,7 @@ from s3prl.upstream.espnet_hubert.hubconf import *
 from s3prl.upstream.example.hubconf import *
 from s3prl.upstream.hf_hubert.hubconf import *
 from s3prl.upstream.necobert_eng.hubconf import *
+from s3prl.upstream.dac.hubconf import *
 from s3prl.upstream.rinna_hubert.hubconf import *
 from s3prl.upstream.hf_wav2vec2.hubconf import *
 from s3prl.upstream.hubert.hubconf import *
